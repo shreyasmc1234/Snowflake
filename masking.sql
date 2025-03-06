@@ -13,8 +13,7 @@ GRANT CREATE DATABASE ON ACCOUNT TO ROLE SECURITYADMIN;
 GRANT CREATE SCHEMA ON DATABASE <database_name> TO ROLE <your_role>;
 GRANT CREATE TABLE ON SCHEMA <schema_name> TO ROLE <your_role>;
 
-GRANT IMPORTED PRIVILEGES ON D=================
-Masking Policies 
+GRANT IMPORTED PRIVILEGES ON database shared_databse;
 =================
 
 --we cannot apply masking policy to shared data
