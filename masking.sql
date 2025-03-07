@@ -269,6 +269,40 @@ DROP MASKING POLICY customer_phone;
 
 ALTER TABLE PUBLIC.CUSTOMER MODIFY COLUMN C_ACCTBAL
     UNSET MASKING POLICY;
+
+
+
+====================================================================================================================================================================================================================
+Rough(Practiced masking policy):
+    
+--Security_admin
+
+create database testdb;
+create schema testing;
+
+create or replace table masking_test as
+select * from SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER;
+
+select * from testdb.testing.masking_test;
+select current_role();
+create or replace masking policy test_policy as (val string) returns string->
+case when current_role() in ('USERADMIN') then val 
+else '*******************'
+end;
+
+show masking policies;
+
+alter table masking_test modify column c_name set masking policy test_policy;
+alter table masking_trst modifu column c_name unset masking policy;
+select * from masking_test;
+
+
+grant usage on database testdb to role useradmin;
+grant usage on schema testing to role useradmin;
+grant all on table masking_test to role useradmin;
+
+
+
     
 DROP MASKING POLICY customer_accbal2;
 
