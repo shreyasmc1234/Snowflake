@@ -110,4 +110,12 @@ GRANT OWNERSHIP ON SCHEMA hr_db.public TO ROLE hr_admin;
 -- try to drop hr_db - but we can't drop
 DROP DATABASE hr_db;
 
+=================================================================================================================================================
+
+-- custom roles
+
+
+
+
+
 
