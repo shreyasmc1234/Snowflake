@@ -114,7 +114,105 @@ DROP DATABASE hr_db;
 
 -- custom roles
 
+Custom Roles
+=============
 
+// Operate with the custom roles we had created
+USE ROLE sales_admin;
+USE sales_db;
+
+-- Create a table --
+create or replace table customers(
+  id number,
+  full_name varchar, 
+  email varchar,
+  phone varchar,
+  create_date DATE DEFAULT CURRENT_DATE);
+
+-- insert data in table --
+insert into customers (id, full_name, email,phone)
+values
+  (1,'abc','abc@gmail.com','262-665-9168'),
+  (2,'def','def@gmail.com','734-987-7120'),
+  (3,'ghi','ghi@gmail.com','867-946-3659'),
+  (4,'jkl','jkl@gmail.com','563-853-8192'),
+  (5,'mno','mno@gmail.com','730-451-8637'),
+  (6,'pqr','pqr@gmail.com','568-896-6138');
+  
+SHOW TABLES;
+
+
+-- switch to sales_users role
+USE ROLE sales_users;
+
+SELECT* FROM CUSTOMERS;
+
+-- switch back to admin role and grant access
+USE ROLE sales_admin;
+
+GRANT USAGE ON DATABASE sales_db TO ROLE sales_users;
+GRANT USAGE ON SCHEMA sales_db.public TO ROLE sales_users;
+GRANT SELECT ON TABLE sales_db.public.CUSTOMERS TO ROLE sales_users;
+
+
+-- switch to sales_users role
+USE ROLE sales_users;
+
+SELECT* FROM CUSTOMERS;
+
+-- try DML operations using sales_users role
+
+DELETE FROM CUSTOMERS;
+DROP TABLE CUSTOMERS;
+
+
+-- switch back to admin role and grant delete/drop access
+USE ROLE sales_admin;
+GRANT ALL ON TABLE sales_db.public.CUSTOMERS TO ROLE sales_users;
+
+-- switch to sales_users role
+USE ROLE sales_users;
+DELETE FROM CUSTOMERS;
+
+-- you can't drop this object with All privileges, only owner can drop objects
+DROP TABLE CUSTOMERS;
+
+-- switch back to admin role and grant ownsership
+USE ROLE sales_admin;
+GRANT OWNERSHIP ON TABLE sales_db.public.CUSTOMERS TO ROLE sales_users;
+
+-- Above query won't work, first we have to revoke other privileges then only we can grant ownership
+REVOKE ALL ON TABLE sales_db.public.CUSTOMERS FROM ROLE SALES_USERS;
+
+GRANT OWNERSHIP ON TABLE sales_db.public.CUSTOMERS TO ROLE SALES_USERS;
+
+-- switch to sales_users role
+USE ROLE sales_users;
+DROP TABLE CUSTOMERS;
+
+
+=================================================================================================================================================
+
+// login with sECURITYADMIN and switch to USERADMIN
+-- create roles
+CREATE ROLE market_admin;
+CREATE ROLE market_users;
+
+-- Create hierarchy
+GRANT ROLE market_users to ROLE market_admin;
+GRANT ROLE market_admin to ROLE SYSADMIN;
+
+-- create users and grant roles
+CREATE USER bharath PASSWORD = 'abc123' DEFAULT_ROLE =  market_users 
+MUST_CHANGE_PASSWORD = TRUE;
+
+GRANT ROLE market_users TO USER bharath;
+
+
+CREATE USER chandra PASSWORD = 'abc123' DEFAULT_ROLE =  market_admin
+MUST_CHANGE_PASSWORD = TRUE;
+
+GRANT ROLE market_admin TO USER chandra;
 
 
 
