@@ -69,4 +69,45 @@ must_change_password=true;
 
 grant role hr_admin to user yashhr;
 
+=================================================================================================================================================
+--logged in to nishma
+
+
+CREATE WAREHOUSE public_wh 
+WITH
+WAREHOUSE_SIZE='SMALL'
+AUTO_SUSPEND=300 
+AUTO_RESUME= TRUE;
+
+-- grant usage on warehouse to role public
+GRANT USAGE ON WAREHOUSE public_wh 
+TO ROLE PUBLIC
+
+-- create database accessible to everyone
+CREATE DATABASE public_db;
+GRANT USAGE ON DATABASE public_db TO ROLE PUBLIC
+
+
+// create sales database
+CREATE DATABASE sales_db;
+
+-- grant ownership to sales_admin that we had created using SECURITY ADMIN
+GRANT OWNERSHIP ON DATABASE sales_db TO ROLE sales_admin;
+
+-- now the owner of this database is sales_admin which is assigned to SYSADMIN
+GRANT OWNERSHIP ON SCHEMA sales_db.public TO ROLE sales_admin;
+
+
+// create hr database
+CREATE DATABASE hr_db;
+
+-- grant ownership to hr_admin that we had created using SECURITY ADMIN
+GRANT OWNERSHIP ON DATABASE hr_db TO ROLE hr_admin;
+
+-- now the owner of this database is hr_admin which is not assigned to SYSADMIN
+GRANT OWNERSHIP ON SCHEMA hr_db.public TO ROLE hr_admin;
+
+-- try to drop hr_db - but we can't drop
+DROP DATABASE hr_db;
+
 
