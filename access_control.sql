@@ -1,3 +1,6 @@
+![image](https://github.com/shreyasmc1234/Snowflake/blob/main/photos/Screenshot%202025-03-07%20111208.png)
+
+
 -- In accountadmin role
 
 create database rolesdb;
