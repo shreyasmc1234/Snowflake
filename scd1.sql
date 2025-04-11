@@ -29,3 +29,38 @@ target.city=source.city
 
 when not matched then
 insert (target.id,target.name,target.city) values(source.id,source.name,source.city)
+
+
+------------------------------------------------------------------------------------------------------------
+Or
+
+
+create or replace transient table stage3(
+id int ,
+name varchar(100)
+);
+
+create or replace table main3(
+id int,
+name varchar(100)
+);
+
+
+merge into main3 a
+using stage3 b on a.id=b.id
+when matched and (a.name<>b.name) then
+update set a.name=b.name
+when not matched then
+insert (id,name) values (b.id,b.name)
+;
+
+insert into main3 values (1,'Manju');
+insert into stage3 values(1,'Manju');
+insert into STAGE3 values(1,'Rama');
+insert into stage3 values(2,'Manju');
+
+select * from main3;
+
+
+truncate table stage3;
+
